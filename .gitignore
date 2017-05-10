@@ -1,1 +1,8 @@
 .DS_Store
+
+# Python Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+poster/data/
+poster/figures
