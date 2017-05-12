@@ -46,7 +46,7 @@ datasets = {
     "credit": os.path.join(DATADIR, "credit", "credit.csv"),
     "energy": os.path.join(DATADIR, "energy", "energy.csv"),
     "game": os.path.join(DATADIR, "game", "game.csv"),
-    "hobbies": os.path.join(DATADIR, "hobbies", "hobbies.csv"),
+    "hobbies": os.path.join(DATADIR, "hobbies"),
     "mushroom": os.path.join(DATADIR, "mushroom", "mushroom.csv"),
     "occupancy": os.path.join(DATADIR, "occupancy", "occupancy.csv"),
 }
@@ -97,11 +97,9 @@ def load_data(name, cols=None, target=None, tts=False, text=False):
     # Get the path from the datasets
     path = datasets[name]
 
-    # TODO: handle the NLP dataset
+    # TODO: handle the NLP datasets
     if text:
-        raise NotImplementedError(
-            "not currently handling text right now"
-        )
+        return load_text(name, categories=cols, tts=tts)
 
     # Load the data frame
     data = pd.read_csv(path)
@@ -109,6 +107,29 @@ def load_data(name, cols=None, target=None, tts=False, text=False):
     # Get X and y data sets
     X = data[cols].as_matrix() if cols else data
     y = data[target].as_matrix() if target else None
+
+    if tts:
+        return train_test_split(X, y, test_size=0.2)
+    return X,y
+
+
+def load_text(name, categories=None, tts=False):
+    # Get the path from the datasets
+    path = datasets[name]
+
+    # Do a listdir to get the categories if not supplied
+    if not categories:
+        categories = [
+            name for name in os.listdir(path)
+            if os.path.isdir(os.path.join(path, name))
+        ]
+
+    # Get the paths to files on disk as input
+    X, y = [], []
+    for category in categories:
+        for name in os.listdir(os.path.join(path, category)):
+            X.append(os.path.join(path, category, name))
+            y.append(category)
 
     if tts:
         return train_test_split(X, y, test_size=0.2)
@@ -402,6 +423,33 @@ def alphas(ax):
     return visualizer
 
 
+def freqdist(ax, stopwords=None):
+    from sklearn.feature_extraction.text import CountVectorizer
+    from yellowbrick.text import FreqDistVisualizer
+
+    X, y = load_data("hobbies", text=True)
+
+    freq = CountVectorizer(input='filename', stop_words=stopwords)
+    X = freq.fit_transform(X)
+
+    visualizer = FreqDistVisualizer()
+    visualizer.fit(X, freq.get_feature_names())
+    return visualizer
+
+
+def tsne(ax):
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from yellowbrick.text import TSNEVisualizer
+
+    X, y = load_data("hobbies", text=True)
+
+    freq = TfidfVectorizer(input='filename', stop_words='english')
+    X = freq.fit_transform(X)
+
+    visualizer = TSNEVisualizer()
+    visualizer.fit(X, y)
+    return visualizer
+
 ##########################################################################
 ## Main Method
 ##########################################################################
@@ -421,6 +469,9 @@ FIGURES = {
     "eight_blobs_kmeans_elbow_curve": elbow,
     "eight_blobs_kmenas_silhouette": silhouette,
     "energy_ridgecv_alphas": alphas,
+    "hobbies_freq_dist": partial(freqdist, stopwords='english'),
+    "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
+    "hobbies_tnse": tsne,
 }
 
 
@@ -430,4 +481,4 @@ if __name__ == '__main__':
         fig = plt.figure()
         ax = fig.add_subplot(111)
         visualizer = method(ax)
-        savefig(name, visualizer)
+        savefig(name, visualizer, png=True)
