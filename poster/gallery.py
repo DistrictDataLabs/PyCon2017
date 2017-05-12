@@ -359,7 +359,7 @@ def class_balance(ax):
     X_train, X_test, y_train, y_test = splits
 
     estimator = RandomForestClassifier()
-    visualizer = ClassBalance(estimator, ax=ax)
+    visualizer = ClassBalance(estimator, ax=ax, classes=classes)
     visualizer.fit(X_train, y_train)
     visualizer.score(X_test, y_test)
     return visualizer
