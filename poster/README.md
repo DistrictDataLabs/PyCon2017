@@ -2,7 +2,8 @@
 
 ## Which Features Do I Use? _(Column 1)_
 
-Given labelled data about rooms ...
+Given labelled data about rooms &hellip;
+
 - Which features are most predictive?
 - Empty or occupied?
 
@@ -16,7 +17,8 @@ Use Yellowbrick Radial Visualizations or Parallel Coordinates to look for class 
 
 ### Rank2D
 
-Given labelled data about credit card default ...
+Given labelled data about credit card default &hellip;
+
 - Feature relationships?
 - Correlations and/or collinearity?
 
@@ -34,10 +36,12 @@ Text data is notoriously high-dimensional and hard to visualize. Yellowbrick can
 
 ### Frequency Distributions
 
-Visualize important word features, before stopwords removal ...
+Visualize important word features, before stopwords removal &hellip;
+
 ![hobbies_freq_dist](figures/hobbies_freq_dist.png)
 
-... and after!
+&hellip; and after!
+
 ![hobbies_freq_dist_stopwords](figures/hobbies_freq_dist_stopwords.png)
 
 ### t-SNE
@@ -49,11 +53,11 @@ Visualize the distribution of corpus documents in 2 dimensions:
 
 How well is our regex part-of-speech tagger labelling with Penn-Treebank tags?
 
-![nursery_rhyme_postag](extra_figs/nursery_rhyme_postag.png)
+![nursery_nltk_pos_tag](figures/nursery_nltk_pos_tag.png)
 
-![algebra_postag](extra_figs/algebra_postag.png)
+![algebra_nltk_pos_tag](figures/algebra_nltk_pos_tag.png)
 
-![french_silk_postag](extra_figs/french_silk_postag.png)
+![recipe_nltk_pos_tag](figures/recipe_nltk_pos_tag.png)
 
 Depends on the text!
 
@@ -90,7 +94,8 @@ max([
 ])
 ```
 
-Except...
+Except &hellip;
+
 - search is difficult, high dimensional.
 - even with clever optimization, no guaranteed solution.
 - time increases exponentially with search space.
@@ -102,6 +107,7 @@ The Model Selection Triple (Arun Kumar, et al):
 ### Enter Yellowbrick
 
 Yellowbrick is a new Python library that:
+
 - extends the Scikit-Learn API.
 - enhances the model selection process.
 - provides visual tools for feature analysis, diagnostics & steering.
@@ -142,11 +148,12 @@ visualizer.score(X_test, y_test)
 visualizer.poof()
 ```
 
-Result:
+<!-- Result:
 
-![concrete_lassocv_prediction_error](figures/concrete_lassocv_prediction_error.png)
+![concrete_lassocv_prediction_error](figures/concrete_lassocv_prediction_error.png) -->
 
 ### Matplotlib
+
 All Yellowbrick visualizers are built with Matplotlib using the pyplot API. Yellowbrick is not a replacement for other visualization libraries - it's specifically for machine learning.
 
 
@@ -182,7 +189,7 @@ What to do with a low-accuracy classifier? Check for imbalance!
 
 ![occupancy_random_forest_class_balance](figures/occupancy_random_forest_class_balance.png)
 
-...that's a visual cue to try stratified sampling, oversampling, or getting more data!
+&hellip;that's a visual cue to try stratified sampling, oversampling, or getting more data!
 
 
 
@@ -198,7 +205,7 @@ Higher silhouette scores mean denser, more separate clusters:
 
 ![eight_blobs_kmenas_silhouette](figures/eight_blobs_kmenas_silhouette.png)
 
-The elbow shows the best value of k... or suggests a different algorithm:
+The elbow shows the best value of k &hellip; or suggests a different algorithm:
 
 ![eight_blobs_kmeans_elbow_curve](figures/eight_blobs_kmeans_elbow_curve.png)
 

@@ -379,7 +379,7 @@ def elbow(ax):
 
     X = make_blobs()
     X, y = make_blobs(centers=8)
-    visualizer = KElbowVisualizer(KMeans(), k=(2,12))
+    visualizer = KElbowVisualizer(KMeans(), ax=ax, k=(2,12))
     visualizer.fit(X)
     return visualizer
 
@@ -398,7 +398,7 @@ def silhouette(ax):
 
     X = make_blobs()
     X, y = make_blobs(centers=8)
-    visualizer = SilhouetteVisualizer(KMeans(6))
+    visualizer = SilhouetteVisualizer(KMeans(6), ax=ax)
     visualizer.fit(X)
     return visualizer
 
@@ -418,7 +418,7 @@ def alphas(ax):
     X, y = load_data("energy", cols=features, target=target)
 
     estimator = RidgeCV(scoring="neg_mean_squared_error")
-    visualizer = AlphaSelection(estimator)
+    visualizer = AlphaSelection(estimator, ax=ax)
     visualizer.fit(X, y)
     return visualizer
 
@@ -432,7 +432,7 @@ def freqdist(ax, stopwords=None):
     freq = CountVectorizer(input='filename', stop_words=stopwords)
     X = freq.fit_transform(X)
 
-    visualizer = FreqDistVisualizer()
+    visualizer = FreqDistVisualizer(ax=ax)
     visualizer.fit(X, freq.get_feature_names())
     return visualizer
 
@@ -446,9 +446,31 @@ def tsne(ax):
     freq = TfidfVectorizer(input='filename', stop_words='english')
     X = freq.fit_transform(X)
 
-    visualizer = TSNEVisualizer()
+    visualizer = TSNEVisualizer(ax=ax)
     visualizer.fit(X, y)
     return visualizer
+
+
+def postag(ax, text="nursery"):
+
+    from postag_texts import nursery_rhyme
+    from postag_texts import algebra
+    from postag_texts import french_silk
+    from nltk.corpus import wordnet as wn
+    from nltk import pos_tag, word_tokenize
+    from yellowbrick.text import PosTagVisualizer
+
+    text = {
+        'nursery': nursery_rhyme,
+        'algebra': algebra,
+        'recipe': french_silk,
+    }[text]
+
+    text = pos_tag(word_tokenize(text))
+    visualizer = PosTagVisualizer(ax=ax)
+    visualizer.fit_transform(text)
+    return visualizer
+
 
 ##########################################################################
 ## Main Method
@@ -456,22 +478,25 @@ def tsne(ax):
 
 # Listing of all the figures to generate
 FIGURES = {
-    "occupancy_radviz": radviz,
-    "occupancy_parallel_coordinates": pcoords,
-    "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
-    "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
-    "concrete_ridgecv_residuals": residuals,
-    "concrete_lassocv_prediction_error": perror,
-    "game_nbayes_classification_report": classification_report,
-    "game_maxent_confusion_matrix": confusion_matrix,
-    "occupancy_random_forest_rocauc": rocauc,
-    "occupancy_random_forest_class_balance": class_balance,
-    "eight_blobs_kmeans_elbow_curve": elbow,
-    "eight_blobs_kmenas_silhouette": silhouette,
-    "energy_ridgecv_alphas": alphas,
-    "hobbies_freq_dist": partial(freqdist, stopwords='english'),
-    "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
-    "hobbies_tnse": tsne,
+    # "occupancy_radviz": radviz,
+    # "occupancy_parallel_coordinates": pcoords,
+    # "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
+    # "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
+    # "concrete_ridgecv_residuals": residuals,
+    # "concrete_lassocv_prediction_error": perror,
+    # "game_nbayes_classification_report": classification_report,
+    # "game_maxent_confusion_matrix": confusion_matrix,
+    # "occupancy_random_forest_rocauc": rocauc,
+    # "occupancy_random_forest_class_balance": class_balance,
+    # "eight_blobs_kmeans_elbow_curve": elbow,
+    # "eight_blobs_kmenas_silhouette": silhouette,
+    # "energy_ridgecv_alphas": alphas,
+    # "hobbies_freq_dist": partial(freqdist, stopwords='english'),
+    # "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
+    # "hobbies_tnse": tsne,
+    "nursery_nltk_pos_tag": partial(postag, text="nursery"),
+    "algebra_nltk_pos_tag": partial(postag, text="algebra"),
+    "recipe_nltk_pos_tag": partial(postag, text="recipe"),
 }
 
 
