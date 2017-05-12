@@ -6,7 +6,9 @@ Given labelled data about rooms ...
 - Which features are most predictive?
 - Empty or occupied?
 
-Use Radial Visualizations or Parallel Coordinates to look for class separability!
+### Radviz and ParallelCoordinates
+
+Use Yellowbrick Radial Visualizations or Parallel Coordinates to look for class separability!
 
 ![occupancy_radviz](figures/occupancy_radviz.png)
 
@@ -16,7 +18,9 @@ Given labelled data about credit card default ...
 - Feature relationships?
 - Correlations and/or collinearity?
 
-Use Rank2D for pairwise feature analysis!
+### Rank2D
+
+Use Yellowbrick Rank2D for pairwise feature analysis!
 
 ![credit_default_covariance_rank2d](figures/credit_default_covariance_rank2d.png)
 
@@ -25,11 +29,24 @@ Use Rank2D for pairwise feature analysis!
 
 ## Working with Text Data _(Column 2)_
 
+Text data is notoriously high-dimensional and hard to visualize. Yellowbrick can help!
+
+### Frequency Distributions
+
+Visualize important word features.
+
+Before stopwords removal ...
 ![hobbies_freq_dist](figures/hobbies_freq_dist.png)
 
+... and after!
 ![hobbies_freq_dist_stopwords](figures/hobbies_freq_dist_stopwords.png)
 
+### t-SNE
+
+Visualize the distribution of corpus documents in 2 dimensions:
 ![hobbies_tnse](figures/hobbies_tnse.png)
+
+### Part-of-Speech Tags
 
 ![nursery_rhyme_postag](postag_figs/nursery_rhyme_postag.png)
 
@@ -42,7 +59,7 @@ Use Rank2D for pairwise feature analysis!
 
 ### Scikit-Learn
 
-Scikit-Learn has so many models, and its API makes automated model selection very convenient!
+Scikit-Learn has so many models, makes automated model selection very convenient!
 
 ```
 from sklearn.svm import SVC
@@ -70,15 +87,16 @@ max([
 ```
 
 Except...
-- search is difficult, particularly in high dimensional space.
-- even with clever optimization techniques, there is no guarantee of a solution.
-- as the search space gets larger, the amount of time increases exponentially.
+- search is difficult, high dimensional.
+- even with clever optimization, no guaranteed solution.
+- time increases exponentially with search space.
 
 ### Enter Yellowbrick
 
 Yellowbrick is a new Python library that:
-- extends the Scikit-Learn API to incorporate visualizations into the machine learning workflow.
-- enhances the model selection process with tools for feature visualization, visual diagnostics, and visual steering.
+- extends the Scikit-Learn API.
+- enhances the model selection process.
+- provides visual tools for feature analysis, diagnostics & steering.
 
 ### Interface
 
@@ -125,17 +143,36 @@ All Yellowbrick visualizers are built with Matplotlib using the pyplot API. Yell
 
 ## Which Model Should I Use? _(Column 4)_
 
-[concrete_ridgecv_residuals](figures/concrete_ridgecv_residuals.png)
+### Prediction Error and Residuals Plot
+
+Visualize the distribution of error to diagnose heteroscedasticity:
 
 ![concrete_lassocv_prediction_error](figures/concrete_lassocv_prediction_error.png)
 
-![game_nbayes_classification_report](figures/game_nbayes_classification_report.png)
+![concrete_ridgecv_residuals](figures/concrete_ridgecv_residuals.png)
 
-![game_maxent_confusion_matrix](figures/game_maxent_confusion_matrix.png)
+
+### ROCAUC, Classification Report, and Confusion Matrix
+
+ROCAUC helps us see overall accuracy:
 
 ![occupancy_random_forest_rocauc](figures/occupancy_random_forest_rocauc.png)
 
+Classification heatmap helps distinguish Type I & Type II error:
+
+![game_nbayes_classification_report](figures/game_nbayes_classification_report.png)
+
+Confusion matrix shows us error on a per-class basis:
+
+![game_maxent_confusion_matrix](figures/game_maxent_confusion_matrix.png)
+
+### Class Balance
+
+What to do with a low-accuracy classifier? Check for imbalance!
+
 ![occupancy_random_forest_class_balance](figures/occupancy_random_forest_class_balance.png)
+
+...that's a visual cue to try stratified sampling, oversampling, or getting more data.
 
 
 ## How Do I Tune My Model? _(Column 5)_
@@ -145,7 +182,3 @@ All Yellowbrick visualizers are built with Matplotlib using the pyplot API. Yell
 ![eight_blobs_kmenas_silhouette](figures/eight_blobs_kmenas_silhouette.png)
 
 ![energy_ridgecv_alphas](figures/energy_ridgecv_alphas.png)
-
-
-
-!
