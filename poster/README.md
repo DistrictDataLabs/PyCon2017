@@ -14,11 +14,11 @@ Use Yellowbrick Radial Visualizations or Parallel Coordinates to look for class 
 
 ![occupancy_parallel_coordinates](figures/occupancy_parallel_coordinates.png)
 
+### Rank2D
+
 Given labelled data about credit card default ...
 - Feature relationships?
 - Correlations and/or collinearity?
-
-### Rank2D
 
 Use Yellowbrick Rank2D for pairwise feature analysis!
 
@@ -27,15 +27,14 @@ Use Yellowbrick Rank2D for pairwise feature analysis!
 ![credit_default_pearson_rank2d](figures/credit_default_pearson_rank2d.png)
 
 
+
 ## Working with Text Data _(Column 2)_
 
 Text data is notoriously high-dimensional and hard to visualize. Yellowbrick can help!
 
 ### Frequency Distributions
 
-Visualize important word features.
-
-Before stopwords removal ...
+Visualize important word features, before stopwords removal ...
 ![hobbies_freq_dist](figures/hobbies_freq_dist.png)
 
 ... and after!
@@ -48,11 +47,16 @@ Visualize the distribution of corpus documents in 2 dimensions:
 
 ### Part-of-Speech Tags
 
-![nursery_rhyme_postag](postag_figs/nursery_rhyme_postag.png)
+How well is our regex part-of-speech tagger labelling with Penn-Treebank tags?
 
-![algebra_postag](postag_figs/algebra_postag.png)
+![nursery_rhyme_postag](extra_figs/nursery_rhyme_postag.png)
 
-![french_silk_postag](postag_figs/french_silk_postag.png)
+![algebra_postag](extra_figs/algebra_postag.png)
+
+![french_silk_postag](extra_figs/french_silk_postag.png)
+
+Depends on the text!
+
 
 
 ## The API _(Column 3)_
@@ -90,6 +94,10 @@ Except...
 - search is difficult, high dimensional.
 - even with clever optimization, no guaranteed solution.
 - time increases exponentially with search space.
+
+The Model Selection Triple (Arun Kumar, et al):
+
+![model_selection_triple](extra_figs/model_selection_triple.png)
 
 ### Enter Yellowbrick
 
@@ -141,6 +149,8 @@ Result:
 ### Matplotlib
 All Yellowbrick visualizers are built with Matplotlib using the pyplot API. Yellowbrick is not a replacement for other visualization libraries - it's specifically for machine learning.
 
+
+
 ## Which Model Should I Use? _(Column 4)_
 
 ### Prediction Error and Residuals Plot
@@ -172,13 +182,30 @@ What to do with a low-accuracy classifier? Check for imbalance!
 
 ![occupancy_random_forest_class_balance](figures/occupancy_random_forest_class_balance.png)
 
-...that's a visual cue to try stratified sampling, oversampling, or getting more data.
+...that's a visual cue to try stratified sampling, oversampling, or getting more data!
+
 
 
 ## How Do I Tune My Model? _(Column 5)_
 
-![eight_blobs_kmeans_elbow_curve](figures/eight_blobs_kmeans_elbow_curve.png)
+### Elbow Curves and Silhouette Scores
+
+- How do you pick an initial value for k in k-means clustering?
+- How do you know whether to increase or decrease k?
+- Is partitive clustering the right choice?
+
+Higher silhouette scores mean denser, more separate clusters:
 
 ![eight_blobs_kmenas_silhouette](figures/eight_blobs_kmenas_silhouette.png)
 
+The elbow shows the best value of k... or suggests a different algorithm:
+
+![eight_blobs_kmeans_elbow_curve](figures/eight_blobs_kmeans_elbow_curve.png)
+
+### Alpha Selection
+
+Should I use Lasso, Ridge, or ElasticNet?
+
 ![energy_ridgecv_alphas](figures/energy_ridgecv_alphas.png)
+
+Is regularization even working??
