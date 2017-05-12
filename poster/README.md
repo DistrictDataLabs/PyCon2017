@@ -38,11 +38,11 @@ Text data is notoriously high-dimensional and hard to visualize. Yellowbrick can
 
 Visualize important word features, before stopwords removal &hellip;
 
-![hobbies_freq_dist](figures/hobbies_freq_dist.png)
+![hobbies_freq_dist_stopwords](figures/hobbies_freq_dist_stopwords.png)
 
 &hellip; and after!
 
-![hobbies_freq_dist_stopwords](figures/hobbies_freq_dist_stopwords.png)
+![hobbies_freq_dist](figures/hobbies_freq_dist.png)
 
 ### t-SNE
 

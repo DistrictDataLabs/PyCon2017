@@ -183,6 +183,7 @@ def radviz(ax):
 
     # Instantiate and fit the visualizer
     visualizer = RadViz(ax=ax, classes=classes, features=features)
+    visualizer.title = "RadViz of Features to Predict Room Occupancy"
     visualizer.fit(X, y)
     visualizer.transform(X)
     return visualizer
@@ -201,6 +202,7 @@ def pcoords(ax):
 
     # Instantiate and fit the visualizer
     visualizer = ParallelCoordinates(ax=ax, classes=classes, features=features)
+    visualizer.title = "Parallel Coordinates of Features to Predict Room Occupancy"
     visualizer.fit(X, y)
     visualizer.transform(X)
     return visualizer
@@ -222,6 +224,7 @@ def rank2d(ax, algorithm='pearson'):
 
     # Instantiate and fit the visualizer
     visualizer = Rank2D(features=features, algorithm=algorithm)
+    visualizer.title = "2D Ranking of Pairs of Features by {}".format(algorithm.title())
     visualizer.fit(X, y)
     visualizer.transform(X)
     return visualizer
@@ -360,6 +363,7 @@ def class_balance(ax):
 
     estimator = RandomForestClassifier()
     visualizer = ClassBalance(estimator, ax=ax, classes=classes)
+    visualizer.title = "Class Balance of Room Occupancy Target"
     visualizer.fit(X_train, y_train)
     visualizer.score(X_test, y_test)
     return visualizer
@@ -380,6 +384,7 @@ def elbow(ax):
     X = make_blobs()
     X, y = make_blobs(centers=8)
     visualizer = KElbowVisualizer(KMeans(), ax=ax, k=(2,12))
+    visualizer.title = "Silhouette Ranked Elbow Curve for K-Means on 8 Blob Dataset"
     visualizer.fit(X)
     return visualizer
 
@@ -399,6 +404,7 @@ def silhouette(ax):
     X = make_blobs()
     X, y = make_blobs(centers=8)
     visualizer = SilhouetteVisualizer(KMeans(6), ax=ax)
+    visualizer.title = "Silhouette Clusters for K-Means (k=6) on an 8 Blob Dataset"
     visualizer.fit(X)
     return visualizer
 
@@ -419,6 +425,7 @@ def alphas(ax):
 
     estimator = RidgeCV(scoring="neg_mean_squared_error")
     visualizer = AlphaSelection(estimator, ax=ax)
+    visualizer.title = ""
     visualizer.fit(X, y)
     return visualizer
 
@@ -432,7 +439,12 @@ def freqdist(ax, stopwords=None):
     freq = CountVectorizer(input='filename', stop_words=stopwords)
     X = freq.fit_transform(X)
 
+    title = "Frequency Distribution of Top 50 Tokens in a Corpus"
+    if stopwords:
+        title += " (Without Stopwords)"
+
     visualizer = FreqDistVisualizer(ax=ax)
+    visualizer.title = title
     visualizer.fit(X, freq.get_feature_names())
     return visualizer
 
@@ -447,6 +459,7 @@ def tsne(ax):
     X = freq.fit_transform(X)
 
     visualizer = TSNEVisualizer(ax=ax)
+    visualizer.title = "t-SNE Projection of the Hobbies Corpus"
     visualizer.fit(X, y)
     return visualizer
 
@@ -460,6 +473,8 @@ def postag(ax, text="nursery"):
     from nltk import pos_tag, word_tokenize
     from yellowbrick.text import PosTagVisualizer
 
+    title = "Highligthed Parts of Speech Tags of the {} Text".format(text.title())
+
     text = {
         'nursery': nursery_rhyme,
         'algebra': algebra,
@@ -468,6 +483,7 @@ def postag(ax, text="nursery"):
 
     text = pos_tag(word_tokenize(text))
     visualizer = PosTagVisualizer(ax=ax)
+    visualizer.title = title
     visualizer.fit_transform(text)
     return visualizer
 
@@ -480,8 +496,8 @@ def postag(ax, text="nursery"):
 FIGURES = {
     # "occupancy_radviz": radviz,
     # "occupancy_parallel_coordinates": pcoords,
-    # "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
-    # "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
+    "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
+    "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
     # "concrete_ridgecv_residuals": residuals,
     # "concrete_lassocv_prediction_error": perror,
     # "game_nbayes_classification_report": classification_report,
@@ -491,12 +507,12 @@ FIGURES = {
     # "eight_blobs_kmeans_elbow_curve": elbow,
     # "eight_blobs_kmenas_silhouette": silhouette,
     # "energy_ridgecv_alphas": alphas,
-    # "hobbies_freq_dist": partial(freqdist, stopwords='english'),
-    # "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
+    "hobbies_freq_dist": partial(freqdist, stopwords='english'),
+    "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
     # "hobbies_tnse": tsne,
-    "nursery_nltk_pos_tag": partial(postag, text="nursery"),
-    "algebra_nltk_pos_tag": partial(postag, text="algebra"),
-    "recipe_nltk_pos_tag": partial(postag, text="recipe"),
+    # "nursery_nltk_pos_tag": partial(postag, text="nursery"),
+    # "algebra_nltk_pos_tag": partial(postag, text="algebra"),
+    # "recipe_nltk_pos_tag": partial(postag, text="recipe"),
 }
 
 
