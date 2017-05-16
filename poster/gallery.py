@@ -19,12 +19,14 @@ Script to generate figures for the PyCon 2017 Yellowbrick Poster.
 ##########################################################################
 
 import os
+import sys
 import warnings
 warnings.filterwarnings("ignore")
 
+sys.path.append("/Users/benjamin/Repos/ddl/yellowbrick/")
+
 import numpy as np
 import pandas as pd
-import yellowbrick as yb
 import matplotlib.pyplot as plt
 
 from functools import partial
@@ -263,7 +265,7 @@ def perror(ax):
 
 
 def classification_report(ax):
-    from sklearn.naive_bayes import GaussianNB
+    from sklearn.naive_bayes import MultinomialNB
     from yellowbrick.classifier import ClassificationReport
 
     features = [
@@ -287,7 +289,7 @@ def classification_report(ax):
         ('encoder', MultiColumnEncoder()),
         ('onehot', OneHotEncoder()),
         ('dense', ToDense()),
-        ('nbayes', GaussianNB()),
+        ('nbayes', MultinomialNB()),
     ])
     visualizer = ClassificationReport(estimator, ax=ax)
     visualizer.fit(X_train, y_train)
@@ -296,7 +298,8 @@ def classification_report(ax):
 
 
 def confusion_matrix(ax):
-    from sklearn.linear_model import LogisticRegression
+    # from sklearn.linear_model import LogisticRegression
+    from sklearn.ensemble import RandomForestClassifier
     from yellowbrick.classifier import ConfusionMatrix
 
     features = [
@@ -320,7 +323,7 @@ def confusion_matrix(ax):
         ('encoder', MultiColumnEncoder()),
         ('onehot', OneHotEncoder()),
         ('dense', ToDense()),
-        ('maxent', LogisticRegression()),
+        ('maxent', RandomForestClassifier()),
     ])
     visualizer = ConfusionMatrix(estimator, ax=ax)
     visualizer.fit(X_train, y_train)
@@ -330,7 +333,7 @@ def confusion_matrix(ax):
 
 def rocauc(ax):
     from yellowbrick.classifier import ROCAUC
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.linear_model import LogisticRegression
 
     # Specify the features of interest and the classes of the target
     features = ["temperature", "relative humidity", "light", "C02", "humidity"]
@@ -341,7 +344,7 @@ def rocauc(ax):
     splits = load_data('occupancy', cols=features, target=target, tts=True)
     X_train, X_test, y_train, y_test = splits
 
-    estimator = RandomForestClassifier()
+    estimator = LogisticRegression()
     visualizer = ROCAUC(estimator, ax=ax)
     visualizer.fit(X_train, y_train)
     visualizer.score(X_test, y_test)
@@ -369,7 +372,7 @@ def class_balance(ax):
     return visualizer
 
 
-def elbow(ax):
+def elbow(ax, metric="distortion"):
     from sklearn.cluster import KMeans
     from yellowbrick.cluster import KElbowVisualizer
     from sklearn.datasets import make_blobs
@@ -383,8 +386,8 @@ def elbow(ax):
 
     X = make_blobs()
     X, y = make_blobs(centers=8)
-    visualizer = KElbowVisualizer(KMeans(), ax=ax, k=(2,12))
-    visualizer.title = "Silhouette Ranked Elbow Curve for K-Means on 8 Blob Dataset"
+    visualizer = KElbowVisualizer(KMeans(), ax=ax, k=(2,16), metric=metric)
+    # visualizer.title = "Silhouette Ranked Elbow Curve for K-Means on 8 Blob Dataset"
     visualizer.fit(X)
     return visualizer
 
@@ -449,17 +452,21 @@ def freqdist(ax, stopwords=None):
     return visualizer
 
 
-def tsne(ax):
+def tsne(ax, classes=True):
     from sklearn.feature_extraction.text import TfidfVectorizer
     from yellowbrick.text import TSNEVisualizer
 
     X, y = load_data("hobbies", text=True)
+    if not classes:
+        y = None
 
     freq = TfidfVectorizer(input='filename', stop_words='english')
     X = freq.fit_transform(X)
 
     visualizer = TSNEVisualizer(ax=ax)
     visualizer.title = "t-SNE Projection of the Hobbies Corpus"
+    if not classes:
+        visualizer.title = "Unlabeled " + visualizer.title
     visualizer.fit(X, y)
     return visualizer
 
@@ -496,20 +503,22 @@ def postag(ax, text="nursery"):
 FIGURES = {
     # "occupancy_radviz": radviz,
     # "occupancy_parallel_coordinates": pcoords,
-    "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
-    "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
+    # "credit_default_covariance_rank2d": partial(rank2d, algorithm='covariance'),
+    # "credit_default_pearson_rank2d": partial(rank2d, algorithm='pearson'),
     # "concrete_ridgecv_residuals": residuals,
     # "concrete_lassocv_prediction_error": perror,
-    # "game_nbayes_classification_report": classification_report,
-    # "game_maxent_confusion_matrix": confusion_matrix,
-    # "occupancy_random_forest_rocauc": rocauc,
-    # "occupancy_random_forest_class_balance": class_balance,
-    # "eight_blobs_kmeans_elbow_curve": elbow,
-    # "eight_blobs_kmenas_silhouette": silhouette,
+    "game_nbayes_classification_report": classification_report,
+    "game_random_forest_confusion_matrix": confusion_matrix,
+    "occupancy_maxent_rocauc": rocauc,
+    "occupancy_class_balance": class_balance,
+    # "eight_blobs_kmeans_distortion_elbow_curve": partial(elbow, metric="distortion"),
+    # "eight_blobs_kmeans_calinski_harabaz_elbow_curve": partial(elbow, metric="calinski_harabaz"),
+    # "eight_blobs_kmeans_silhouette": silhouette,
     # "energy_ridgecv_alphas": alphas,
-    "hobbies_freq_dist": partial(freqdist, stopwords='english'),
-    "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
+    # "hobbies_freq_dist": partial(freqdist, stopwords='english'),
+    # "hobbies_freq_dist_stopwords": partial(freqdist, stopwords=None),
     # "hobbies_tnse": tsne,
+    # "unlabeled_hobbies_tsne": partial(tsne, classes=False),
     # "nursery_nltk_pos_tag": partial(postag, text="nursery"),
     # "algebra_nltk_pos_tag": partial(postag, text="algebra"),
     # "recipe_nltk_pos_tag": partial(postag, text="recipe"),
