@@ -14,6 +14,6 @@ The first script downloads the datasets and the second generates the figures. Th
 
 ## Tutorial
 
-The `tutorial` directory is a copy of the [github repo](https://github.com/nd1/pycon_2017) for the tutorial [Fantastic Data and Where To Find Them: An introduction to APIs, RSS, and Scraping](Fantastic Data and Where To Find Them: An introduction to APIs, RSS, and Scraping). The presentation slides were created using [reveal.js](https://github.com/hakimel/reveal.js/) and [jupyter notebook](http://jupyter.org/). They are [hosted online](https://nd1.github.io/pycon_2017/#/) at the project repo, or you can view them locally by running the following in the directory where `slides.ipynb` is located:
+The `tutorial` directory is a copy of the [github repo](https://github.com/nd1/pycon_2017) for the tutorial [Fantastic Data and Where To Find Them: An introduction to APIs, RSS, and Scraping](https://us.pycon.org/2017/schedule/presentation/177/). The presentation slides were created using [reveal.js](https://github.com/hakimel/reveal.js/) and [jupyter notebook](http://jupyter.org/). They are [hosted online](https://nd1.github.io/pycon_2017/#/) at the project repo, or you can view them locally by running the following in the directory where `slides.ipynb` is located:
 
     $ jupyter-nbconvert --to slides slides.ipynb --reveal-prefix=reveal.js --post serve
